@@ -9,6 +9,7 @@ const { v4: uuidv4 } = require('uuid');
 const feedRoutes = require('./routes/feed');
 const authRoutes = require('./routes/auth');
 const cors = require('cors');
+const { connect } = require('http2');
 
 const app = express();
 app.use(cors());
@@ -69,6 +70,18 @@ mongoose
     'mongodb+srv://kimhanjin:75kYKRBxracYLrj6@cluster0.0bms1.mongodb.net/blog?retryWrites=true&w=majority&appName=Cluster0'
   )
   .then(result => {
-    app.listen(8080);
+    const server = app.listen(8080);
+    const io = require('socket.io')(server, {
+      cors: {
+        origin: "http://localhost:3000",
+        methods: ["GET", "POST"],
+        allowedHeaders: ["Content-Type", "Authorization"],
+        credentials: true,
+      }
+    });
+    
+    io.on('connection', socket => { 
+      console.log('client Connect');
+    });
   })
   .catch(err => console.log(err));
