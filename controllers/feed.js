@@ -173,7 +173,7 @@ exports.deletePost = (req, res, next) => {
       return User.findById(req.userId);
     })
     .then(user => {
-      user.posts.pull(postId);
+      user.posts.pull(postId);  //포스트 삭제시 유저데이터에있는 포스트 리스트에서도 삭제
       return user.save();
     })
     .then(result => {
