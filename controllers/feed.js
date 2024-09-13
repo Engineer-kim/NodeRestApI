@@ -15,6 +15,7 @@ exports.getPosts = (req, res, next) => {
     .then(count => {
       totalItems = count;
       return Post.find()
+        .populate('creator', 'name')
         .skip((currentPage - 1) * perPage)
         .limit(perPage);
     })
@@ -83,6 +84,7 @@ exports.createPost = (req, res, next) => {
 exports.getPost = (req, res, next) => {
   const postId = req.params.postId;
   Post.findById(postId)
+    .populate('creator', 'name')
     .then(post => {
       if (!post) {
         const error = new Error('Could not find post.');
@@ -165,7 +167,7 @@ exports.deletePost = (req, res, next) => {
       }
       // Check logged in user
       clearImage(post.imageUrl);
-      return Post.findByIdAndRemove(postId);
+      return Post.findByIdAndDelete(postId);
     })
     .then(result => {
       return User.findById(req.userId);
