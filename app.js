@@ -10,6 +10,7 @@ const feedRoutes = require('./routes/feed');
 const authRoutes = require('./routes/auth');
 const cors = require('cors');
 const { connect } = require('http2');
+const { init } = require('./models/post');
 
 const app = express();
 app.use(cors());
@@ -71,15 +72,7 @@ mongoose
   )
   .then(result => {
     const server = app.listen(8080);
-    const io = require('socket.io')(server, {
-      cors: {
-        origin: "http://localhost:3000",
-        methods: ["GET", "POST"],
-        allowedHeaders: ["Content-Type", "Authorization"],
-        credentials: true,
-      }
-    });
-    
+    const io = require('./socket').init(server); // CORS 설정이 이미 init에서 처리됨
     io.on('connection', socket => { 
       console.log('client Connect');
     });
