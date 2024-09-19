@@ -6,9 +6,16 @@ const mongoose = require('mongoose');
 const multer = require('multer');
 const { v4: uuidv4 } = require('uuid');
 
+const  {  graphqlHTTP } = require('express-graphql');
+
+
+const graphqlSchema = require('./graphql/schema');
+const graphqlResolver = require('./graphql/resolvers');
+
+
 const cors = require('cors');
 const { connect } = require('http2');
-const { init } = require('./models/post');
+const { init, schema } = require('./models/post');
 
 const app = express();
 app.use(cors());
@@ -52,6 +59,11 @@ app.use((req, res, next) => {
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
   next();
 });
+
+app.use('/graphql' , graphqlHTTP({
+  schema: graphqlSchema,
+  rootValue: graphqlResolver
+}));
 
 
 app.use((error, req, res, next) => {
