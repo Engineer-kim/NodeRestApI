@@ -6,8 +6,6 @@ const mongoose = require('mongoose');
 const multer = require('multer');
 const { v4: uuidv4 } = require('uuid');
 
-const feedRoutes = require('./routes/feed');
-const authRoutes = require('./routes/auth');
 const cors = require('cors');
 const { connect } = require('http2');
 const { init } = require('./models/post');
@@ -55,8 +53,6 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use('/feed', feedRoutes);
-app.use('/auth', authRoutes);
 
 app.use((error, req, res, next) => {
   console.log(error);
@@ -71,10 +67,6 @@ mongoose
     'mongodb+srv://kimhanjin:75kYKRBxracYLrj6@cluster0.0bms1.mongodb.net/blog?retryWrites=true&w=majority&appName=Cluster0'
   )
   .then(result => {
-    const server = app.listen(8080);
-    const io = require('./socket').init(server); // CORS 설정이 이미 init에서 처리됨
-    io.on('connection', socket => { 
-      console.log('client Connect');
-    });
+    app.listen(8080);
   })
   .catch(err => console.log(err));
