@@ -1,5 +1,6 @@
 const { buildSchema } = require('graphql');
 
+//Root Query 는  GraphQL 스키마에서 클라이언트가 데이터를 요청할 수 있는 쿼리의 루트 타입을 정의하는 부분
 module.exports = buildSchema(`
       type Post {
         _id: ID!
